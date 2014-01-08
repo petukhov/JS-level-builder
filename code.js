@@ -1,5 +1,53 @@
 "use strict";
 
+
+
+function myonload()
+{
+	var buttonBig = document.getElementById("Big");
+	var buttonSmall = document.getElementById("Small");
+	var buttonDisenable = document.getElementById("Disenable");
+	var buttonSerialize = document.getElementById("Serialize");
+
+	var createRect = function(type)
+	{
+		var stagePos = stage.getPosition();
+		var position = {x: stage.getWidth()/2 - stagePos.x, y: stage.getHeight()/2 - stagePos.y};
+		addRect(position, type);
+		layer.draw();
+	}
+
+	buttonBig.onclick = function() {createRect(1);};
+	buttonSmall.onclick = function() {createRect(2);};
+	buttonDisenable.onclick = function() 
+	{
+		if(selectedObject)
+		{
+			selectedObject.magneticEnabled = !selectedObject.magneticEnabled;
+			//selectedObject.setFill("red");
+			selectedObject.magneticEnabled && (selectedObject.setFill('white'));
+			!selectedObject.magneticEnabled && (selectedObject.setFill('ccccdd'));
+			layer.drawScene();
+			dragLayer.drawScene();
+		}
+	}
+	buttonSerialize.onclick = function()
+	{
+		 var json = layer.toJSON();
+		 var jsonWindow = window.open('','JSON source','height=400,width=500');
+		 jsonWindow.document.write(json);
+		 jsonWindow.document.close();
+	}
+}
+
+if(window.addEventListener) {
+  window.addEventListener("load", myonload, false);
+} else if(window.attachEvent) {
+	window.attachEvent("onload", myonload);
+} else {
+	document.addEventListener("load", myonload, false);
+}
+
 // global variables declarations
 var objects = [];
 var selectedObject;
@@ -21,12 +69,11 @@ stage.add(dragLayer);
 
 stage.on('mousedown', function(evt) {
   console.log('mousedown');
-  if(selectedObject != null) selectedObject.setStroke('black');
+  if(selectedObject != null) selectedObject.setStroke('black'); // this is needed because it sets the color of the prew draggable to black
+  //if(!evt.targetNode.magneticEnabled) return;
   selectedObject = evt.targetNode;
   selectedObject.setStroke('red');
   evt.cancelBubble = true;
-  removeLines(evt.targetNode);
-  lineLayer.drawScene();
   mouseDown = true;
   selectedObject.moveTo(dragLayer);
   layer.draw();
@@ -42,6 +89,9 @@ stage.on('mouseup', function(evt) {
   lineLayer.drawScene();
   selectedObject.stopDrag();
   mouseDown = false;
+  console.log("lineLayer count: " + lineLayer.getChildren().toArray().length);
+  console.log("layer count: " + layer.getChildren().toArray().length);
+  console.log("dragLayer count: " + dragLayer.getChildren().toArray().length);
 });
 
 //whenDragged is called every 1/8 of a second
@@ -69,7 +119,7 @@ function whenDragged() {
     //chunk end
 
     var changed = false;
-    for(var i=0; i<objects.length; i++)
+    for(var i=0, l=objects.length; i<l; i++)
     {
       var entry = objects[i];
       if(entry != selectedObject && entry.magneticEnabled)

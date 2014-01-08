@@ -7,7 +7,7 @@
         margin: 0px;
         padding: 0px;
       }
-      #container
+      #super
       {
           margin-top: 4%;
           border:1px dashed gray;
@@ -16,23 +16,31 @@
           margin-left:auto;
           margin-right:auto;
           background-color: #eeeeee;
+      }
 
+      #buttons {
+        position: relative;
+        bottom: 600px;
+        right: 110px;
+        width: 100px;
       }
-      #disenable
-      {
-        float: left;
-      }
-      #disenable2
-      {
-        float: right;
+      button {
+        margin-top: 10px;
+        display:block;
       }
     </style>
   </head>
   <body>
-    <div id="container"></div>
+    <div id="super">
+      <div id="container"></div>
+      <div id="buttons">
+        <button id="Big">Big block</button> 
+        <button id="Small">Small block</button> 
+        <button id="Disenable">Disenable!</button> 
+        <button id="Serialize">Serialize!</button> 
+      </div>
+    </div>
     <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.7.4.min.js"></script>
     <script src="code.js" defer="defer"></script>
-    <button type="button" id="disenable">Disenable</button>
-    <button type="button" id="disenable2">Disenable</button>
   </body>
 </html>
